@@ -21,4 +21,17 @@ internal class BubbleSortTest {
         }
     }
 
+    @Test
+    fun `string sort test`() {
+        val strArray = arrayOf("david", "alex", "valerie", "arthur", "james", "monk", "submarine")
+        val strArrayCopy = strArray.clone()
+
+        strArrayCopy.sort()
+        bubbleSort(strArray)
+
+        for (index in strArray.indices) {
+            assertEquals(strArrayCopy[index], strArray[index])
+        }
+    }
+
 }

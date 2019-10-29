@@ -3,6 +3,7 @@ package bubble_sort
 // In-Place; Stable
 // Shifts biggest item to rightmost index in every iteration
 // Best: O(n), Worst: O(n^2)
+// Space: O(1)
 fun <T : Comparable<T>> bubbleSort(items: Array<T>) {
     if (items.isEmpty()) return
 
