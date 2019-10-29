@@ -1,6 +1,6 @@
 package selection_sort
 
-// In-Place; Stable
+// In-Place; Not Stable because compare&swap! changes position of items (can be made stable)
 // Find min item, swap it with leftmost unsorted item
 // O(n) for min search, O(n) for find-min for all items: O(n^2)
 // Space: O(1)
