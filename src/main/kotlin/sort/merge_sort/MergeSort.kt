@@ -1,4 +1,4 @@
-package merge_sort
+package sort.merge_sort
 
 fun <T : Comparable<T>> mergeSortProxy(items: Array<T>) {
     if (items.isEmpty()) return

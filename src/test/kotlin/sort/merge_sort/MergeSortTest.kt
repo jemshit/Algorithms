@@ -1,10 +1,10 @@
-package merge_sort
+package sort.merge_sort
 
 import org.junit.jupiter.api.Test
-import randomIntSortTest
-import sortReverseSortedInput
-import sortSortedInput
-import stringSortTest
+import sort.randomIntSortTest
+import sort.sortReverseSortedInput
+import sort.sortSortedInput
+import sort.stringSortTest
 
 internal class MergeSortTest {
 

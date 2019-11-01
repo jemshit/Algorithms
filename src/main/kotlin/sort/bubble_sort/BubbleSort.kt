@@ -1,4 +1,4 @@
-package bubble_sort
+package sort.bubble_sort
 
 // In-Place; Stable
 // Shifts biggest item to rightmost index in every iteration

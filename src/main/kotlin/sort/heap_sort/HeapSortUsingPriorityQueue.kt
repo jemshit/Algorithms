@@ -1,4 +1,4 @@
-package heap_sort
+package sort.heap_sort
 
 import java.util.*
 

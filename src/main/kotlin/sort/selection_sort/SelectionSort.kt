@@ -1,4 +1,4 @@
-package selection_sort
+package sort.selection_sort
 
 // In-Place; Not Stable because compare&swap! changes position of items (can be made stable)
 // Find min item, swap it with leftmost unsorted item

@@ -1,3 +1,5 @@
+package sort
+
 import org.junit.jupiter.api.Assertions
 import kotlin.random.Random
 

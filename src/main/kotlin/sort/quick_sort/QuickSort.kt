@@ -1,4 +1,4 @@
-package quick_sort
+package sort.quick_sort
 
 fun <T : Comparable<T>> quickSortProxy(items: Array<T>) {
     if (items.isEmpty()) return

@@ -1,4 +1,4 @@
-package insertion_sort
+package sort.insertion_sort
 
 // In-Place; Stable
 // Inserts each item to left sorted subarray, to correct location
