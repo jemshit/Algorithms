@@ -86,10 +86,12 @@ class GraphUsingMapOfList<KEY : Any, DATA : Any?>(private val directed: Boolean)
         return true
     }
 
+    // O(1)
     fun getEdges(nodeKey: KEY): List<Edge<KEY, DATA>> {
         return graph.get(nodeKey) ?: emptyList()
     }
 
+    // O(V+E) ? O(E)?
     fun getAllEdges(): List<Edge<KEY, DATA>> {
         if (edgeCount == 0) return emptyList()
         val allEdges = mutableListOf<Edge<KEY, DATA>>()
