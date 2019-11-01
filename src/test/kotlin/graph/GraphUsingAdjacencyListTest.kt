@@ -238,4 +238,28 @@ internal class GraphUsingAdjacencyListTraversalTest {
         assertEquals(5, path[5])
     }
 
+    @Test
+    fun `dfs path build`() {
+        val nodeCount = 8
+        val graph = GraphUsingAdjacencyList(directed = false, nodeCount = nodeCount)
+        graph.addEdge(start = 0, end = 1)
+        graph.addEdge(start = 0, end = 3)
+        graph.addEdge(start = 1, end = 4)
+        graph.addEdge(start = 1, end = 2)
+        graph.addEdge(start = 1, end = 5)
+        graph.addEdge(start = 2, end = 6)
+        graph.addEdge(start = 3, end = 7)
+
+        // cycle
+        graph.addEdge(start = 1, end = 2)
+        graph.addEdge(start = 2, end = 3)
+        assertEquals(18, graph.edgeCount())
+
+        val path = graph.depthFirstPathFind(0, 6)
+        assertEquals(0, path[0])
+        assertEquals(1, path[1])
+        assertEquals(2, path[2])
+        assertEquals(6, path[3])
+    }
+
 }

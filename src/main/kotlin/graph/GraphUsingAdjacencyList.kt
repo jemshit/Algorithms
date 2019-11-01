@@ -28,11 +28,7 @@ class GraphUsingAdjacencyList {
     fun edgeCount(): Int = edgeCount
 
     // O(1)
-    fun addEdge(
-        start: Int,
-        end: Int,
-        weight: Int? = null
-    ) {
+    fun addEdge(start: Int, end: Int, weight: Int? = null) {
         // add edge 'start->end'
         graph[start].add(Edge(start, end, weight))
         edgeCount += 1
@@ -45,10 +41,7 @@ class GraphUsingAdjacencyList {
     }
 
     // O(E)
-    fun removeEdge(
-        start: Int,
-        end: Int
-    ): Boolean {
+    fun removeEdge(start: Int, end: Int): Boolean {
         // remove edge 'start-end'
         val edgesOfStart = graph.get(start)
         val indexStart = edgesOfStart.indexOfFirst { edge -> edge.start == start && edge.end == end }
@@ -85,7 +78,8 @@ class GraphUsingAdjacencyList {
     }
 
     // O(V+E) same edge visited from both nodes
-    fun depthFirstTraversal(startNode: Int): List<Int> {
+    fun depthFirstTraversal(startNode: Int)
+            : List<Int> {
         if (startNode >= nodeCount) throw IllegalArgumentException()
 
         val nodes = mutableListOf<Int>()
@@ -111,7 +105,8 @@ class GraphUsingAdjacencyList {
     }
 
     // O(V+E)
-    fun breadthFirstTraversal(startNode: Int): List<Int> {
+    fun breadthFirstTraversal(startNode: Int)
+            : List<Int> {
         if (startNode >= nodeCount) throw IllegalArgumentException()
 
         val nodes = mutableListOf<Int>()
@@ -134,11 +129,23 @@ class GraphUsingAdjacencyList {
         return nodes
     }
 
-    fun breadthFirstPathFind(
-        startNode: Int,
-        findNode: Int
-    ): List<Int> {
-        val prevNodes = breadthFirstSearchPrevNodes(startNode, findNode)
+    fun breadthFirstPathFind(startNode: Int, findNode: Int)
+            : List<Int> {
+        return pathFind(startNode, findNode, isBfs = true)
+    }
+
+    fun depthFirstPathFind(startNode: Int, findNode: Int)
+            : List<Int> {
+        return pathFind(startNode, findNode, isBfs = false)
+    }
+
+    private fun pathFind(startNode: Int, findNode: Int, isBfs: Boolean)
+            : List<Int> {
+        val prevNodes = if (isBfs)
+            breadthFirstSearchPrevNodes(startNode, findNode)
+        else
+            depthFirstSearchPrevNodes(startNode, findNode)
+
         val path = mutableListOf<Int>()
         var node = findNode
         while (node != prevNodes[node]) {
@@ -150,10 +157,8 @@ class GraphUsingAdjacencyList {
         return path.reversed()
     }
 
-    private fun breadthFirstSearchPrevNodes(
-        startNode: Int,
-        findNode: Int
-    ): List<Int> {
+    private fun breadthFirstSearchPrevNodes(startNode: Int, findNode: Int)
+            : List<Int> {
         if (startNode >= nodeCount || findNode >= nodeCount) throw IllegalArgumentException()
 
         // BFS Traverse, find previous nodes of each node
@@ -172,6 +177,33 @@ class GraphUsingAdjacencyList {
                     visited[edge.end] = true
                     queue.offer(edge.end)
                     prevNodes[edge.end] = node
+                }
+            }
+        }
+
+        return prevNodes.toList() as List<Int>
+    }
+
+    private fun depthFirstSearchPrevNodes(startNode: Int, findNode: Int)
+            : List<Int> {
+        if (startNode >= nodeCount || findNode >= nodeCount) throw IllegalArgumentException()
+
+        val prevNodes = arrayOfNulls<Int>(nodeCount)
+        val visited = Array<Boolean>(nodeCount) { false }
+        val stack = Stack<Int>()
+        stack.push(startNode)
+        visited[startNode] = true
+        prevNodes[startNode] = startNode
+
+        while (stack.isNotEmpty()) {
+            val node = stack.pop()
+            if (node == findNode) break
+            val edges = getEdges(node)
+            for (index in edges.size - 1 downTo 0) {
+                if (!visited[edges[index].end]) {
+                    visited[edges[index].end] = true
+                    stack.push(edges[index].end)
+                    prevNodes[edges[index].end] = node
                 }
             }
         }
