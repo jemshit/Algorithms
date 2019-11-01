@@ -93,10 +93,10 @@ class GraphUsingAdjacencyList {
             nodes.add(node)
 
             val edges = getEdges(node)
-            for (index in edges.size - 1 downTo 0) {
-                if (!visited[edges[index].end]) {
-                    visited[edges[index].end] = true
-                    stack.push(edges[index].end)
+            for (edge in edges.reversed()) {
+                if (!visited[edge.end]) {
+                    visited[edge.end] = true
+                    stack.push(edge.end)
                 }
             }
         }
@@ -115,14 +115,14 @@ class GraphUsingAdjacencyList {
     }
 
     private fun depthFirstTraversalRecursive(visited: Array<Boolean>, result: MutableList<Int>, startNode: Int) {
-        if (visited[startNode]) return
-
         visited[startNode] = true
         result.add(startNode)
 
         val edges = getEdges(startNode)
-        for (edge in edges)
-            depthFirstTraversalRecursive(visited, result, edge.end)
+        for (edge in edges) {
+            if (!visited[edge.end])
+                depthFirstTraversalRecursive(visited, result, edge.end)
+        }
     }
 
     // O(V+E)
