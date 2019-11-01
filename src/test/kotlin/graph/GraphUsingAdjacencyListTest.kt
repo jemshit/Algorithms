@@ -188,6 +188,34 @@ internal class GraphUsingAdjacencyListTraversalTest {
     }
 
     @Test
+    fun `dfs recursive test`() {
+        val nodeCount = 8
+        val graph = GraphUsingAdjacencyList(directed = false, nodeCount = nodeCount)
+        graph.addEdge(start = 0, end = 1)
+        graph.addEdge(start = 0, end = 2)
+        graph.addEdge(start = 0, end = 3)
+        graph.addEdge(start = 1, end = 4)
+        graph.addEdge(start = 1, end = 5)
+        graph.addEdge(start = 2, end = 6)
+        graph.addEdge(start = 3, end = 7)
+        // cycle
+        graph.addEdge(start = 1, end = 2)
+        graph.addEdge(start = 2, end = 3)
+        assertEquals(18, graph.edgeCount())
+
+        val dfsNodes = graph.depthFirstTraversalRecursive(0)
+        assertEquals(nodeCount, dfsNodes.size)
+        assertEquals(0, dfsNodes[0])
+        assertEquals(1, dfsNodes[1])
+        assertEquals(4, dfsNodes[2])
+        assertEquals(5, dfsNodes[3])
+        assertEquals(2, dfsNodes[4])
+        assertEquals(6, dfsNodes[5])
+        assertEquals(3, dfsNodes[6])
+        assertEquals(7, dfsNodes[7])
+    }
+
+    @Test
     fun `bfs path build`() {
         val nodeCount = 8
         val graph = GraphUsingAdjacencyList(directed = false, nodeCount = nodeCount)

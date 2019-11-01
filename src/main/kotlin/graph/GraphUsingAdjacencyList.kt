@@ -104,6 +104,27 @@ class GraphUsingAdjacencyList {
         return nodes
     }
 
+    fun depthFirstTraversalRecursive(startNode: Int)
+            : List<Int> {
+
+        val nodes = mutableListOf<Int>()
+        val visited = Array<Boolean>(nodeCount) { false }
+        depthFirstTraversalRecursive(visited, nodes, startNode)
+
+        return nodes
+    }
+
+    private fun depthFirstTraversalRecursive(visited: Array<Boolean>, result: MutableList<Int>, startNode: Int) {
+        if (visited[startNode]) return
+
+        visited[startNode] = true
+        result.add(startNode)
+
+        val edges = getEdges(startNode)
+        for (edge in edges)
+            depthFirstTraversalRecursive(visited, result, edge.end)
+    }
+
     // O(V+E)
     fun breadthFirstTraversal(startNode: Int)
             : List<Int> {
