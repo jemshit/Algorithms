@@ -2,7 +2,9 @@ package graph
 
 class Grid {
 
-    data class Coordinate(val x: Int, val y: Int)
+    data class Coordinate(val x: Int, val y: Int) {
+        override fun toString(): String = "($x,$y)"
+    }
 
     val grid: Array<Array<String>>
     val diagonalMoveAllowed: Boolean
@@ -21,7 +23,7 @@ class Grid {
     }
 
     fun getNeighbours(x: Int, y: Int): List<Coordinate> {
-        if (x >= columnCount || y >= rowCount) throw IllegalArgumentException()
+        if (x >= rowCount || y >= columnCount) throw IllegalArgumentException()
 
         val directions: List<Coordinate> = if (diagonalMoveAllowed)
             listOf(
@@ -44,14 +46,14 @@ class Grid {
 
         val neighbours = mutableListOf<Coordinate>()
         for (direction in directions) {
-            val nextRow = y + direction.y
-            val nextColumn = x + direction.x
+            val nextX = x + direction.x
+            val nextY = y + direction.y
 
-            if (nextColumn < 0 || nextRow < 0) continue
-            if (nextColumn >= columnCount || nextRow >= rowCount) continue
+            if (nextX < 0 || nextY < 0) continue
+            if (nextX >= rowCount || nextY >= columnCount) continue
 
-            if (!grid[nextColumn][nextRow].equals(blockedChar, ignoreCase = false))
-                neighbours.add(Coordinate(nextColumn, nextRow))
+            if (!grid[nextX][nextY].equals(blockedChar, ignoreCase = false))
+                neighbours.add(Coordinate(nextX, nextY))
         }
         return neighbours
     }
