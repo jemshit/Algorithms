@@ -21,9 +21,8 @@ fun GraphUsingAdjacencyList.shortestPathDijkstra(): Array<Int> {
 
         if (shortestPaths[node] != null && shortestPaths[node]!! < distance)
             continue
-        if (shortestPaths[node] == null || shortestPaths[node]!! > distance)
-            shortestPaths[node] = distance
 
+        shortestPaths[node] = distance
         for (edge in getEdges(node)) {
             val neighbour = edge.end
             // You can't get shorter path if it is visited before
