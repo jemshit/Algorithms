@@ -12,7 +12,7 @@ fun <T : Comparable<T>> mergeSortProxy(items: Array<T>) {
 // O(logn) for divide, O(n) for merge, so it is always O(n*logn)
 // Space is O(n)
 // Not in-place, Stable
-private fun <T : Comparable<T>> mergeSort(
+fun <T : Comparable<T>> mergeSort(
     items: Array<T>,
     startIndex: Int,
     endIndex: Int
