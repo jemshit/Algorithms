@@ -3,7 +3,7 @@ package sort.heap_sort
 import kotlin.math.max
 
 // O(n*logn) time, O(1) space
-// Not in-place, Not stable
+// In-place, Not stable
 fun <T : Comparable<T>> heapSort(items: Array<T>) {
     if (items.isEmpty()) return
 

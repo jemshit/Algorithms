@@ -19,3 +19,23 @@ fun <T : Comparable<T>> binarySearch(
     else
         return -1
 }
+
+fun <T : Comparable<T>> binarySearchIterative(sortedArray: Array<T>, find: T): Int {
+    var start = 0
+    var end = sortedArray.size - 1
+
+    while (start in sortedArray.indices && end in sortedArray.indices) {
+        val middleIndex = (end - start + 1) / 2 + start
+        val middleItem = sortedArray[middleIndex]
+
+        if (middleItem == find)
+            return middleIndex
+        else if (find < middleItem) {
+            end = middleIndex - 1
+        } else if (find > middleItem) {
+            start = middleIndex + 1
+        }
+    }
+
+    return -1
+}

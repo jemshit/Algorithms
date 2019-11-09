@@ -49,4 +49,50 @@ internal class BinarySearchTest {
 
         assertEquals(-1, foundIndex)
     }
+
+
+    @Test
+    fun `binarySearchIterative first index`() {
+        val input = arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+        val foundIndex = binarySearchIterative(input, find = 1)
+
+        assertEquals(0, foundIndex)
+    }
+
+    @Test
+    fun `binarySearchIterative last index`() {
+        val input = arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+        val foundIndex = binarySearchIterative(input, find = 10)
+
+        assertEquals(9, foundIndex)
+    }
+
+    @Test
+    fun `binarySearchIterative middle index`() {
+        val input = arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+
+        val foundIndex = binarySearchIterative(input, find = 6)
+
+        assertEquals(5, foundIndex)
+    }
+
+    @Test
+    fun `binarySearchIterative not found`() {
+        val input = arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+
+        val foundIndex = binarySearchIterative(input, find = 12)
+
+        assertEquals(-1, foundIndex)
+    }
+
+    @Test
+    fun `binarySearchIterative not found 2`() {
+        val input = arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+
+        val foundIndex = binarySearchIterative(input, find = -1)
+
+        assertEquals(-1, foundIndex)
+    }
 }
