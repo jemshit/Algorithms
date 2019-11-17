@@ -24,7 +24,7 @@ fun <T : Comparable<T>> binarySearchIterative(sortedArray: Array<T>, find: T): I
     var start = 0
     var end = sortedArray.size - 1
 
-    while (start in sortedArray.indices && end in sortedArray.indices) {
+    while (start <= end) {
         val middleIndex = (end - start + 1) / 2 + start
         val middleItem = sortedArray[middleIndex]
 
