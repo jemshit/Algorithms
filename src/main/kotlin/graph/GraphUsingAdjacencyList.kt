@@ -2,11 +2,19 @@ package graph
 
 class GraphUsingAdjacencyList {
 
-    data class Edge(
-        val start: Int,
-        val end: Int,
-        var weight: Int? = null
-    )
+    class Edge(val start: Int, val end: Int, var weight: Int? = null) : Comparable<Edge> {
+        override fun compareTo(other: Edge): Int {
+            if (start == other.start) {
+                return end.compareTo(other.end)
+            } else
+                return start.compareTo(other.start)
+        }
+
+        override fun equals(other: Any?): Boolean {
+            val other = other as Edge
+            return start == other.start && end == other.end && weight == other.weight
+        }
+    }
 
     private val directed: Boolean
     private val graph: Array<MutableList<Edge>>
