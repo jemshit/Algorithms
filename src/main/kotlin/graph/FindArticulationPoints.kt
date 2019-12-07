@@ -5,7 +5,7 @@ import kotlin.math.min
 fun GraphUsingAdjacencyList.findArticulationPoints(): List<Int> {
     val artPoints = Array<Boolean>(this.nodeCount) { false }
     val visited = Array<Boolean>(this.nodeCount) { false }
-    var order = 0
+    var order = -1
     val visitOrder = Array<Int>(this.nodeCount) { -1 }
     val earlyVisitOrder = Array<Int>(this.nodeCount) { -1 }
 
