@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package graph
 
 import java.util.*

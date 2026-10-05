@@ -57,7 +57,7 @@ class GraphUsingAdjacencyList {
 
         // remove edge 'end-start' if undirected graph
         if (!directed) {
-            val edgesOfEnd = graph.get(end)!!
+            val edgesOfEnd = graph.get(end)
             val indexEnd = edgesOfEnd.indexOfFirst { edge -> edge.start == end && edge.end == start }
             if (indexEnd < 0) throw IllegalAccessException("edge between endKey-startKey does not exist for undirected graph")
             edgesOfEnd.removeAt(indexEnd)

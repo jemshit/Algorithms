@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package sort.merge_sort
 
 fun <T : Comparable<T>> mergeSortProxy(items: Array<T>) {

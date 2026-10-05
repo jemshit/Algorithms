@@ -19,5 +19,5 @@ fun GraphUsingAdjacencyList.shortestPathBellmanFord(): Array<Int> {
         }
     }
 
-    return shortestPaths as Array<Int>
+    return shortestPaths
 }

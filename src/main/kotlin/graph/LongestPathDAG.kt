@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package graph
 
 fun GraphUsingAdjacencyList.longestPathDAG(): Array<Int> {
