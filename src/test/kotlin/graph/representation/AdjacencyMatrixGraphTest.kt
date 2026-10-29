@@ -13,11 +13,11 @@ internal class AdjacencyMatrixGraphTest {
         val graph = AdjacencyMatrixGraph(directed = true, vertexCount = 3)
 
         graph.addEdge(0, 1, -4)
-        graph.addEdge(0, 2, Int.MAX_VALUE)
+        graph.addEdge(0, 2, 0)
         graph.addEdge(0, 1, 7)
 
         assertEquals(2, graph.edgeCount)
-        assertEquals(listOf(Edge(1, 7), Edge(2, Int.MAX_VALUE)), graph.outgoingEdges(0))
+        assertEquals(listOf(Edge(1, 7), Edge(2, 0)), graph.outgoingEdges(0))
         assertFalse(graph.hasEdge(1, 0))
     }
 
@@ -43,6 +43,7 @@ internal class AdjacencyMatrixGraphTest {
         val graph = AdjacencyMatrixGraph(directed = true, vertexCount = 2)
 
         assertThrows(IllegalArgumentException::class.java) { graph.addEdge(0, 0) }
+        assertThrows(IllegalArgumentException::class.java) { graph.addEdge(0, 1, Int.MAX_VALUE) }
         assertThrows(IllegalArgumentException::class.java) { graph.hasEdge(0, 2) }
     }
 }

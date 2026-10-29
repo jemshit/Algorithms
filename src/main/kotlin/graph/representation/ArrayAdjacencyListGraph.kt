@@ -13,7 +13,10 @@ class ArrayAdjacencyListGraph(
 
     init {
         require(vertexCount >= 0) { "vertexCount must not be negative" }
-        adjacency = Array(vertexCount) { mutableListOf() }
+        adjacency = Array(vertexCount) {
+            // each vertex has empty edge list
+            mutableListOf()
+        }
     }
 
     override fun vertices(): Iterable<Int> = 0 until vertexCount
@@ -23,9 +26,9 @@ class ArrayAdjacencyListGraph(
         requireVertex(to)
         require(from != to) { "A simple graph does not allow self-loops" }
 
-        val existingIndex = adjacency[from].indexOfFirst { it.to == to }
-        if (existingIndex >= 0) {
-            adjacency[from][existingIndex] = Edge(to, weight)
+        val existingToIndex = adjacency[from].indexOfFirst { it.to == to }
+        if (existingToIndex >= 0) {
+            adjacency[from][existingToIndex] = Edge(to, weight)
             if (!directed) {
                 val reverseIndex = adjacency[to].indexOfFirst { it.to == from }
                 check(reverseIndex >= 0) { "Undirected edge is missing its reverse entry" }
@@ -34,8 +37,11 @@ class ArrayAdjacencyListGraph(
             return
         }
 
+        // not existing, add new
         adjacency[from].add(Edge(to, weight))
-        if (!directed) adjacency[to].add(Edge(from, weight))
+        if (!directed) {
+            adjacency[to].add(Edge(from, weight))
+        }
         edgeCount++
     }
 

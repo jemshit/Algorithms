@@ -15,7 +15,10 @@ class MapAdjacencyListGraph<V : Any>(
         private set
 
     init {
-        for (vertex in vertices) adjacency.putIfAbsent(vertex, mutableListOf())
+        for (vertex in vertices) {
+            // latest duplicate overrides
+            adjacency[vertex] = mutableListOf()
+        }
     }
 
     override fun vertices(): Iterable<V> = adjacency.keys
@@ -25,9 +28,9 @@ class MapAdjacencyListGraph<V : Any>(
         edgesOf(to)
         require(from != to) { "A simple graph does not allow self-loops" }
 
-        val existingIndex = fromEdges.indexOfFirst { it.to == to }
-        if (existingIndex >= 0) {
-            fromEdges[existingIndex] = Edge(to, weight)
+        val existingToIndex = fromEdges.indexOfFirst { it.to == to }
+        if (existingToIndex >= 0) {
+            fromEdges[existingToIndex] = Edge(to, weight)
             if (!directed) {
                 val reverseEdges = edgesOf(to)
                 val reverseIndex = reverseEdges.indexOfFirst { it.to == from }
@@ -37,8 +40,11 @@ class MapAdjacencyListGraph<V : Any>(
             return
         }
 
+        // not existing, add new
         fromEdges.add(Edge(to, weight))
-        if (!directed) edgesOf(to).add(Edge(from, weight))
+        if (!directed) {
+            edgesOf(to).add(Edge(from, weight))
+        }
         edgeCount++
     }
 

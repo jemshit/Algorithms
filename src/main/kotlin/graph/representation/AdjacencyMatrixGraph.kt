@@ -1,5 +1,7 @@
 package graph.representation
 
+private const val INF = Int.MAX_VALUE
+
 /**
  * Adjacency matrix for vertices numbered from 0 until [vertexCount].
  * Uses O(V²) space, provides O(1) edge lookup, and scans O(V) cells for neighbors.
@@ -9,16 +11,16 @@ class AdjacencyMatrixGraph(
     override val vertexCount: Int
 ) : Graph<Int> {
 
-    private val present: Array<BooleanArray>
-    private val weights: Array<IntArray>
+    private val adjacency: Array<IntArray>
 
     override var edgeCount: Int = 0
         private set
 
     init {
         require(vertexCount >= 0) { "vertexCount must not be negative" }
-        present = Array(vertexCount) { BooleanArray(vertexCount) }
-        weights = Array(vertexCount) { IntArray(vertexCount) }
+        adjacency = Array(vertexCount) {
+            IntArray(vertexCount) { INF }
+        }
     }
 
     override fun vertices(): Iterable<Int> = 0 until vertexCount
@@ -27,24 +29,26 @@ class AdjacencyMatrixGraph(
         requireVertex(from)
         requireVertex(to)
         require(from != to) { "A simple graph does not allow self-loops" }
+        require(weight != INF) { "Int.MAX_VALUE is reserved to mean no edge" }
 
-        if (!present[from][to]) edgeCount++
-        present[from][to] = true
-        weights[from][to] = weight
+        if (adjacency[from][to] == INF) {
+            // if new edge
+            edgeCount++
+        }
+        adjacency[from][to] = weight
 
         if (!directed) {
-            present[to][from] = true
-            weights[to][from] = weight
+            adjacency[to][from] = weight
         }
     }
 
     override fun removeEdge(from: Int, to: Int): Boolean {
         requireVertex(from)
         requireVertex(to)
-        if (!present[from][to]) return false
+        if (adjacency[from][to] == INF) return false
 
-        present[from][to] = false
-        if (!directed) present[to][from] = false
+        adjacency[from][to] = INF
+        if (!directed) adjacency[to][from] = INF
         edgeCount--
         return true
     }
@@ -52,14 +56,15 @@ class AdjacencyMatrixGraph(
     override fun hasEdge(from: Int, to: Int): Boolean {
         requireVertex(from)
         requireVertex(to)
-        return present[from][to]
+        return adjacency[from][to] != INF
     }
 
     override fun outgoingEdges(from: Int): List<Edge<Int>> {
         requireVertex(from)
         return buildList {
             for (to in 0 until vertexCount) {
-                if (present[from][to]) add(Edge(to, weights[from][to]))
+                val weight = adjacency[from][to]
+                if (weight != INF) add(Edge(to, weight))
             }
         }
     }
