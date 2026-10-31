@@ -33,18 +33,18 @@ fun <V> dfsRecursive(graph: Graph<V>, start: V): List<V> {
     val result = mutableListOf<V>()
     val visited = mutableSetOf<V>()
 
-    fun visit(vertex: V) {
+    fun dfsVisit(vertex: V) {
         // mark as visited while adding in recursive
         visited.add(vertex)
         result.add(vertex)
 
         for (edge in graph.outgoingEdges(vertex)) {
             if (edge.to !in visited) {
-                visit(edge.to)
+                dfsVisit(edge.to)
             }
         }
     }
 
-    visit(start)
+    dfsVisit(start)
     return result
 }
