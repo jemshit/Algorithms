@@ -13,16 +13,21 @@ fun <V> findConnectedComponents(graph: Graph<V>): ConnectedComponents<V> {
     val componentOf = mutableMapOf<V, Int>()
     var component = 0
 
-    fun visit(vertex: V) {
+    fun dfsVisit(vertex: V) {
+        // like marking as visited
         componentOf[vertex] = component
+
         for (edge in graph.outgoingEdges(vertex)) {
-            if (edge.to !in componentOf) visit(edge.to)
+            if (edge.to !in componentOf) {
+                dfsVisit(edge.to)
+            }
         }
     }
 
+    // for every unvisited node, mark reachable nodes as same component
     for (vertex in graph.vertices()) {
         if (vertex !in componentOf) {
-            visit(vertex)
+            dfsVisit(vertex)
             component++
         }
     }

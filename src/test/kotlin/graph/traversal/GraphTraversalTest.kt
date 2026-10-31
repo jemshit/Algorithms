@@ -21,7 +21,7 @@ internal class GraphTraversalTest {
 
         Assertions.assertEquals(
             listOf("A", "B", "C", "D"),
-            breadthFirstTraversal(graph, "A")
+            bfs(graph, "A")
         )
     }
 
@@ -41,7 +41,7 @@ internal class GraphTraversalTest {
         graph.addEdge(from = 2, to = 3)
         Assertions.assertEquals(9, graph.edgeCount)
 
-        val bfsNodes = breadthFirstTraversal(graph, 0)
+        val bfsNodes = bfs(graph, 0)
         Assertions.assertEquals(vertexCount, bfsNodes.size)
         for (index in 0 until vertexCount) {
             Assertions.assertEquals(index, bfsNodes[index])
@@ -64,7 +64,7 @@ internal class GraphTraversalTest {
         graph.addEdge(from = 2, to = 3)
         Assertions.assertEquals(9, graph.edgeCount)
 
-        val dfsNodes = depthFirstTraversal(graph, 0)
+        val dfsNodes = dfs(graph, 0)
         Assertions.assertEquals(vertexCount, dfsNodes.size)
         Assertions.assertEquals(0, dfsNodes[0])
         Assertions.assertEquals(1, dfsNodes[1])
@@ -92,7 +92,7 @@ internal class GraphTraversalTest {
         graph.addEdge(from = 2, to = 3)
         Assertions.assertEquals(9, graph.edgeCount)
 
-        val dfsNodes = depthFirstTraversalRecursive(graph, 0)
+        val dfsNodes = dfsRecursive(graph, 0)
         Assertions.assertEquals(vertexCount, dfsNodes.size)
         Assertions.assertEquals(0, dfsNodes[0])
         Assertions.assertEquals(1, dfsNodes[1])

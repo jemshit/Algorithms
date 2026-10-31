@@ -2,17 +2,11 @@ package graph.traversal
 
 import graph.representation.Graph
 
-fun <V> breadthFirstPath(graph: Graph<V>, start: V, target: V): List<V> =
-    findPath(graph, start, target, breadthFirst = true)
-
-fun <V> depthFirstPath(graph: Graph<V>, start: V, target: V): List<V> =
-    findPath(graph, start, target, breadthFirst = false)
-
-private fun <V> findPath(
+// BFS returns a shortest path measured by number of edges.
+fun <V> bfsPath(
     graph: Graph<V>,
     start: V,
-    target: V,
-    breadthFirst: Boolean
+    target: V
 ): List<V> {
     val vertices = graph.vertices().toSet()
     require(start in vertices) { "Unknown start vertex: $start" }
@@ -20,23 +14,65 @@ private fun <V> findPath(
 
     val previous = mutableMapOf<V, V>()
     val visited = mutableSetOf(start)
-    val frontier = ArrayDeque<V>()
-    frontier.addLast(start)
+    val queue = ArrayDeque<V>()
+    queue.addLast(start)
 
-    while (frontier.isNotEmpty()) {
-        val vertex = if (breadthFirst) frontier.removeFirst() else frontier.removeLast()
+    while (queue.isNotEmpty()) {
+        val vertex = queue.removeFirst()
         if (vertex == target) break
 
-        val edges = graph.outgoingEdges(vertex)
-        val traversalEdges = if (breadthFirst) edges else edges.asReversed()
-        for (edge in traversalEdges) {
-            if (visited.add(edge.to)) {
+        for (edge in graph.outgoingEdges(vertex)) {
+            if (edge.to !in visited) {
+                visited.add(edge.to)
                 previous[edge.to] = vertex
-                frontier.addLast(edge.to)
+                queue.addLast(edge.to)
             }
         }
     }
 
+    // couldn't find
+    if (target !in visited) return emptyList()
+
+    val path = mutableListOf(target)
+    var current = target
+    while (current != start) {
+        current = previous.getValue(current)
+        path.add(current)
+    }
+    path.reverse()
+    return path
+}
+
+// DFS returns a path, but not necessarily a shortest path.
+fun <V> dfsPath(
+    graph: Graph<V>,
+    start: V,
+    target: V
+): List<V> {
+    val vertices = graph.vertices().toSet()
+    require(start in vertices) { "Unknown start vertex: $start" }
+    require(target in vertices) { "Unknown target vertex: $target" }
+
+    val previous = mutableMapOf<V, V>()
+    val visited = mutableSetOf(start)
+    val stack = ArrayDeque<V>()
+    stack.addLast(start)
+
+    while (stack.isNotEmpty()) {
+        val vertex = stack.removeLast()
+        if (vertex == target) break
+
+        // Reverse neighbor order because the stack processes the last item first.
+        for (edge in graph.outgoingEdges(vertex).asReversed()) {
+            if (edge.to !in visited) {
+                visited.add(edge.to)
+                previous[edge.to] = vertex
+                stack.addLast(edge.to)
+            }
+        }
+    }
+
+    // couldn't find
     if (target !in visited) return emptyList()
 
     val path = mutableListOf(target)

@@ -2,7 +2,7 @@ package graph.traversal
 
 import graph.representation.ArrayAdjacencyListGraph
 
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 internal class GraphPathsTest {
@@ -21,12 +21,10 @@ internal class GraphPathsTest {
         // cycle
         graph.addEdge(from = 1, to = 2)
         graph.addEdge(from = 2, to = 3)
-        Assertions.assertEquals(9, graph.edgeCount)
+        assertEquals(9, graph.edgeCount)
 
-        val path = breadthFirstPath(graph, 0, 6)
-        Assertions.assertEquals(0, path[0])
-        Assertions.assertEquals(2, path[1])
-        Assertions.assertEquals(6, path[2])
+        val path = bfsPath(graph, 0, 6)
+        assertEquals(listOf(0, 2, 6), path)
     }
 
     @Test
@@ -49,13 +47,8 @@ internal class GraphPathsTest {
         graph.addEdge(10, 9)
         graph.addEdge(9, 8)
 
-        val path = breadthFirstPath(graph, 10, 5)
-        Assertions.assertEquals(10, path[0])
-        Assertions.assertEquals(9, path[1])
-        Assertions.assertEquals(0, path[2])
-        Assertions.assertEquals(7, path[3])
-        Assertions.assertEquals(6, path[4])
-        Assertions.assertEquals(5, path[5])
+        val path = bfsPath(graph, 10, 5)
+        assertEquals(listOf(10, 9, 0, 7, 6, 5), path)
     }
 
     @Test
@@ -73,13 +66,27 @@ internal class GraphPathsTest {
         // cycle
         graph.addEdge(from = 1, to = 2)
         graph.addEdge(from = 2, to = 3)
-        Assertions.assertEquals(8, graph.edgeCount)
+        assertEquals(8, graph.edgeCount)
 
-        val path = depthFirstPath(graph, 0, 6)
-        Assertions.assertEquals(0, path[0])
-        Assertions.assertEquals(1, path[1])
-        Assertions.assertEquals(2, path[2])
-        Assertions.assertEquals(6, path[3])
+        val path = dfsPath(graph, 0, 6)
+        assertEquals(listOf(0, 1, 2, 6), path)
+    }
+
+    @Test
+    fun `returns empty path when target is unreachable`() {
+        val graph = ArrayAdjacencyListGraph(directed = false, vertexCount = 3)
+        graph.addEdge(from = 0, to = 1)
+
+        assertEquals(emptyList<Int>(), bfsPath(graph, start = 0, target = 2))
+        assertEquals(emptyList<Int>(), dfsPath(graph, start = 0, target = 2))
+    }
+
+    @Test
+    fun `path from a vertex to itself contains that vertex`() {
+        val graph = ArrayAdjacencyListGraph(directed = false, vertexCount = 3)
+
+        assertEquals(listOf(1), bfsPath(graph, start = 1, target = 1))
+        assertEquals(listOf(1), dfsPath(graph, start = 1, target = 1))
     }
 
 }

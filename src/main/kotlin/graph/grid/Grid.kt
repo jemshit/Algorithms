@@ -1,61 +1,61 @@
 package graph.grid
 
-class Grid {
+data class Coordinate(val row: Int, val column: Int) {
+    override fun toString(): String = "($row,$column)"
+}
 
-    data class Coordinate(val x: Int, val y: Int) {
-        override fun toString(): String = "($x,$y)"
-    }
+private val FOUR_DIRECTIONS = listOf(
+    Coordinate(row = -1, column = 0), // Up
+    Coordinate(row = 0, column = -1), // Left
+    Coordinate(row = 1, column = 0), // Down
+    Coordinate(row = 0, column = 1) // Right
+)
 
-    val grid: Array<Array<String>>
-    val diagonalMoveAllowed: Boolean
+private val EIGHT_DIRECTIONS = FOUR_DIRECTIONS + listOf(
+    Coordinate(row = -1, column = -1), // Up-left
+    Coordinate(row = 1, column = 1), // Down-right
+    Coordinate(row = -1, column = 1), // Up-right
+    Coordinate(row = 1, column = -1) // Down-left
+)
+
+class Grid(
+    val cells: Array<CharArray>,
+    val diagonalMoveAllowed: Boolean = false,
+    val blockedChar: Char = '#'
+) {
     val rowCount: Int
+        get() = cells.size
+
     val columnCount: Int
-    val blockedChar: String
+        get() = cells[0].size
 
-    constructor(grid: Array<Array<String>>, diagonalMoveAllowed: Boolean, blockedChar: String) {
-        if (grid.isEmpty()) throw IllegalArgumentException()
-
-        this.grid = grid
-        this.rowCount = grid.size
-        this.columnCount = grid[0].size
-        this.diagonalMoveAllowed = diagonalMoveAllowed
-        this.blockedChar = blockedChar
+    init {
+        require(cells.isNotEmpty()) { "Grid must contain at least one row" }
+        require(cells[0].isNotEmpty()) { "Grid must contain at least one column" }
+        require(cells.all { it.size == columnCount }) { "Grid rows must have equal lengths" }
     }
 
-    fun getNeighbours(x: Int, y: Int): List<Coordinate> {
-        if (x >= rowCount || y >= columnCount) throw IllegalArgumentException()
+    fun getNeighbours(cell: Coordinate): List<Coordinate> {
+        require(cell.row in 0 until rowCount && cell.column in 0 until columnCount) {
+            "Coordinate is outside the grid: $cell"
+        }
 
-        val directions: List<Coordinate> = if (diagonalMoveAllowed)
-            listOf(
-                Coordinate(-1, 0),
-                Coordinate(0, -1),
-                Coordinate(1, 0),
-                Coordinate(0, 1),
-                Coordinate(-1, -1),
-                Coordinate(1, 1),
-                Coordinate(-1, 1),
-                Coordinate(1, -1)
-            )
-        else
-            listOf(
-                Coordinate(-1, 0),
-                Coordinate(0, -1),
-                Coordinate(1, 0),
-                Coordinate(0, 1)
-            )
+        val directions = if (diagonalMoveAllowed) EIGHT_DIRECTIONS else FOUR_DIRECTIONS
 
         val neighbours = mutableListOf<Coordinate>()
         for (direction in directions) {
-            val nextX = x + direction.x
-            val nextY = y + direction.y
+            val nextRow = cell.row + direction.row
+            val nextColumn = cell.column + direction.column
 
-            if (nextX < 0 || nextY < 0) continue
-            if (nextX >= rowCount || nextY >= columnCount) continue
+            // ignore outside the bounds
+            if (nextRow !in 0 until rowCount || nextColumn !in 0 until columnCount) {
+                continue
+            }
 
-            if (!grid[nextX][nextY].equals(blockedChar, ignoreCase = false))
-                neighbours.add(Coordinate(nextX, nextY))
+            if (cells[nextRow][nextColumn] != blockedChar) {
+                neighbours.add(Coordinate(row = nextRow, column = nextColumn))
+            }
         }
         return neighbours
     }
-
 }
