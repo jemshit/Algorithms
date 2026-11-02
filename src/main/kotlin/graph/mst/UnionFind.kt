@@ -31,6 +31,11 @@ internal class UnionFind(elementCount: Int) {
         return root
     }
 
+    /** Returns true when [first] and [second] belong to the same component. */
+    fun connected(first: Int, second: Int): Boolean {
+        return find(first) == find(second)
+    }
+
     /** Merges two components and returns false if they were already connected. */
     fun union(first: Int, second: Int): Boolean {
         var firstRoot = find(first)

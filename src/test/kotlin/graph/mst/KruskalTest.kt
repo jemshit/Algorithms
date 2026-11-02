@@ -24,7 +24,7 @@ internal class KruskalTest {
         graph.addEdge(4, 6, 6)
         graph.addEdge(5, 6, 1)
 
-        val result = kruskalMinimumSpanningTree(graph)
+        val result = kruskalMst(graph)
 
         assertEquals(6, result.edges.size)
         assertEquals(9, result.totalWeight)
@@ -42,7 +42,7 @@ internal class KruskalTest {
         graph.addEdge("B", "D", 5)
         graph.addEdge("C", "D", 3)
 
-        val result = kruskalMinimumSpanningTree(graph)
+        val result = kruskalMst(graph)
 
         assertEquals(3, result.edges.size)
         assertEquals(6, result.totalWeight)
@@ -56,10 +56,10 @@ internal class KruskalTest {
         directed.addEdge(0, 1)
 
         assertThrows(IllegalArgumentException::class.java) {
-            kruskalMinimumSpanningTree(disconnected)
+            kruskalMst(disconnected)
         }
         assertThrows(IllegalArgumentException::class.java) {
-            kruskalMinimumSpanningTree(directed)
+            kruskalMst(directed)
         }
     }
 }

@@ -9,35 +9,55 @@ import graph.representation.Graph
  * Collecting edges takes O(V + E) from an adjacency list or O(V²) from an adjacency matrix.
  * Sorting takes O(E log E), which dominates when the graph uses an adjacency list.
  */
-fun <V> kruskalMinimumSpanningTree(graph: Graph<V>): MinimumSpanningTree<V> {
+fun <V> kruskalMst(graph: Graph<V>): MinimumSpanningTree<V> {
     require(!graph.directed) { "Kruskal's algorithm requires an undirected graph" }
 
     val vertices = graph.vertices().toList()
-    val indexOf = vertices.withIndex().associate { (index, vertex) -> vertex to index }
-    val processed = mutableSetOf<V>()
-    val edges = mutableListOf<Edge<V>>()
-
-    // An undirected edge appears in both adjacency lists; collect it only once.
-    for (from in vertices) {
-        for (edge in graph.outgoingEdges(from)) {
-            if (edge.to !in processed) edges.add(edge)
-        }
-        processed.add(from)
-    }
+    // Union-Find uses integer indices, so map each generic graph vertex to an index.
+    val vertexToIndex = vertices.withIndex().associate { (index, vertex) -> vertex to index }
+    val edges = collectUndirectedEdges(graph)
 
     val unionFind = UnionFind(vertices.size)
-    val tree = mutableListOf<Edge<V>>()
+    val mst = mutableListOf<Edge<V>>()
     var totalWeight = 0
 
-    for (edge in edges.sortedBy { it.weight }) {
-        if (!unionFind.union(indexOf.getValue(edge.from), indexOf.getValue(edge.to))) continue
-        tree.add(edge)
+    val sortedEdges = edges.sortedBy { it.weight }
+    for (edge in sortedEdges) {
+        val fromIndex = vertexToIndex.getValue(edge.from)
+        val toIndex = vertexToIndex.getValue(edge.to)
+
+        // Skip the edge if its endpoints are already connected; it would create a cycle.
+        if (unionFind.connected(fromIndex, toIndex))
+            continue
+
+        // Connect the components and add the edge to the MST.
+        unionFind.union(fromIndex, toIndex)
+        mst.add(edge)
         totalWeight += edge.weight
-        if (tree.size == vertices.size - 1) break
+
+        if (mst.size == vertices.size - 1)
+            break
     }
 
-    require(tree.size == maxOf(0, vertices.size - 1)) {
+    require(mst.size == maxOf(0, vertices.size - 1)) {
         "Kruskal's algorithm requires a connected graph"
     }
-    return MinimumSpanningTree(tree, totalWeight)
+    return MinimumSpanningTree(mst, totalWeight)
+}
+
+private fun <V> collectUndirectedEdges(graph: Graph<V>): List<Edge<V>> {
+    val edges = mutableListOf<Edge<V>>()
+    val processedVertices = mutableSetOf<V>()
+
+    // An undirected edge appears in both adjacency lists; collect it only once.
+    for (vertex in graph.vertices()) {
+        for (edge in graph.outgoingEdges(vertex)) {
+            if (edge.to !in processedVertices) {
+                edges.add(edge)
+            }
+        }
+        processedVertices.add(vertex)
+    }
+
+    return edges
 }

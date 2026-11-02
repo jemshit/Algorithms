@@ -18,7 +18,7 @@ internal class PrimTest {
         graph.addEdge(1, 3, 5)
         graph.addEdge(2, 3, 3)
 
-        val result = primMinimumSpanningTree(graph, 0)
+        val result = primMst(graph, 0)
 
         assertEquals(3, result.edges.size)
         assertEquals(6, result.totalWeight)
@@ -46,7 +46,7 @@ internal class PrimTest {
         graph.addEdge(3, 7, 2)
         graph.addEdge(7, 8, 6)
 
-        val result = primMinimumSpanningTree(graph, 0)
+        val result = primMst(graph, 0)
 
         assertEquals(9, result.edges.size)
         assertEquals(14, result.totalWeight)
@@ -68,7 +68,7 @@ internal class PrimTest {
         graph.addEdge(4, 6, 6)
         graph.addEdge(5, 6, 1)
 
-        val result = primMinimumSpanningTree(graph, 0)
+        val result = primMst(graph, 0)
 
         assertEquals(6, result.edges.size)
         assertEquals(9, result.totalWeight)
@@ -90,7 +90,7 @@ internal class PrimTest {
         graph.addEdge(6, 7, 11)
         graph.addEdge(7, 8, 5)
 
-        val result = primMinimumSpanningTree(graph, 0)
+        val result = primMst(graph, 0)
 
         assertEquals(8, result.edges.size)
         assertEquals(39, result.totalWeight)
@@ -102,7 +102,7 @@ internal class PrimTest {
         graph.addEdge(0, 1)
 
         assertThrows(IllegalArgumentException::class.java) {
-            primMinimumSpanningTree(graph, 0)
+            primMst(graph, 0)
         }
     }
 
