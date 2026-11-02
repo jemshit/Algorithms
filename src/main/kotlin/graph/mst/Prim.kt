@@ -1,5 +1,6 @@
 package graph.mst
 
+import graph.representation.Edge
 import graph.representation.Graph
 import java.util.PriorityQueue
 
@@ -11,14 +12,14 @@ fun <V> primMinimumSpanningTree(
     require(!graph.directed) { "Prim's algorithm requires an undirected graph" }
     require(start in graph.vertices()) { "Unknown start vertex: $start" }
 
-    val tree = mutableListOf<MstEdge<V>>()
+    val tree = mutableListOf<Edge<V>>()
     val visited = mutableSetOf(start)
-    val candidates = PriorityQueue<MstEdge<V>>(compareBy { it.weight })
+    val candidates = PriorityQueue<Edge<V>>(compareBy { it.weight })
     var totalWeight = 0
 
     fun addCandidates(from: V) {
         for (edge in graph.outgoingEdges(from)) {
-            if (edge.to !in visited) candidates.add(MstEdge(from, edge.to, edge.weight))
+            if (edge.to !in visited) candidates.add(edge)
         }
     }
 

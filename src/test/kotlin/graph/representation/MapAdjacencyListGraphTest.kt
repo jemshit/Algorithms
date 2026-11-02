@@ -20,7 +20,7 @@ internal class MapAdjacencyListGraphTest {
         assertEquals(3, graph.vertexCount)
         assertEquals(2, graph.edgeCount)
         assertEquals(listOf("A", "B", "C"), graph.vertices().toList())
-        assertEquals(listOf(Edge("B", 5)), graph.outgoingEdges("A"))
+        assertEquals(listOf(Edge(from = "A", to = "B", weight = 5)), graph.outgoingEdges("A"))
         assertTrue(graph.hasEdge("B", "C"))
         assertFalse(graph.hasEdge("C", "B"))
     }
@@ -47,8 +47,8 @@ internal class MapAdjacencyListGraphTest {
         graph.addEdge("A", "B", 2)
         graph.addEdge("A", "B", 8)
         assertEquals(1, graph.edgeCount)
-        assertEquals(listOf(Edge("B", 8)), graph.outgoingEdges("A"))
-        assertEquals(listOf(Edge("A", 8)), graph.outgoingEdges("B"))
+        assertEquals(listOf(Edge(from = "A", to = "B", weight = 8)), graph.outgoingEdges("A"))
+        assertEquals(listOf(Edge(from = "B", to = "A", weight = 8)), graph.outgoingEdges("B"))
 
         assertTrue(graph.removeEdge("A", "B"))
         assertEquals(0, graph.edgeCount)
@@ -66,7 +66,10 @@ internal class MapAdjacencyListGraphTest {
 
         graph.addEdge("A", "C")
 
-        assertEquals(listOf(Edge("B")), snapshot)
-        assertEquals(listOf(Edge("B"), Edge("C")), graph.outgoingEdges("A"))
+        assertEquals(listOf(Edge(from = "A", to = "B")), snapshot)
+        assertEquals(
+            listOf(Edge(from = "A", to = "B"), Edge(from = "A", to = "C")),
+            graph.outgoingEdges("A")
+        )
     }
 }

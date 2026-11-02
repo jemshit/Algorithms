@@ -30,20 +30,20 @@ class MapAdjacencyListGraph<V : Any>(
 
         val existingToIndex = fromEdges.indexOfFirst { it.to == to }
         if (existingToIndex >= 0) {
-            fromEdges[existingToIndex] = Edge(to, weight)
+            fromEdges[existingToIndex] = Edge(from, to, weight)
             if (!directed) {
                 val reverseEdges = edgesOf(to)
                 val reverseIndex = reverseEdges.indexOfFirst { it.to == from }
                 check(reverseIndex >= 0) { "Undirected edge is missing its reverse entry" }
-                reverseEdges[reverseIndex] = Edge(from, weight)
+                reverseEdges[reverseIndex] = Edge(from = to, to = from, weight = weight)
             }
             return
         }
 
         // not existing, add new
-        fromEdges.add(Edge(to, weight))
+        fromEdges.add(Edge(from, to, weight))
         if (!directed) {
-            edgesOf(to).add(Edge(from, weight))
+            edgesOf(to).add(Edge(from = to, to = from, weight = weight))
         }
         edgeCount++
     }

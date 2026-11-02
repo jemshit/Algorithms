@@ -28,19 +28,19 @@ class ArrayAdjacencyListGraph(
 
         val existingToIndex = adjacency[from].indexOfFirst { it.to == to }
         if (existingToIndex >= 0) {
-            adjacency[from][existingToIndex] = Edge(to, weight)
+            adjacency[from][existingToIndex] = Edge(from, to, weight)
             if (!directed) {
                 val reverseIndex = adjacency[to].indexOfFirst { it.to == from }
                 check(reverseIndex >= 0) { "Undirected edge is missing its reverse entry" }
-                adjacency[to][reverseIndex] = Edge(from, weight)
+                adjacency[to][reverseIndex] = Edge(from = to, to = from, weight = weight)
             }
             return
         }
 
         // not existing, add new
-        adjacency[from].add(Edge(to, weight))
+        adjacency[from].add(Edge(from, to, weight))
         if (!directed) {
-            adjacency[to].add(Edge(from, weight))
+            adjacency[to].add(Edge(from = to, to = from, weight = weight))
         }
         edgeCount++
     }

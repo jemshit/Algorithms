@@ -1,12 +1,8 @@
 package graph.mst
 
-data class MstEdge<V>(
-    val from: V,
-    val to: V,
-    val weight: Int
-)
+import graph.representation.Edge
 
 data class MinimumSpanningTree<V>(
-    val edges: List<MstEdge<V>>,
+    val edges: List<Edge<V>>,
     val totalWeight: Int
 )

@@ -17,7 +17,10 @@ internal class AdjacencyMatrixGraphTest {
         graph.addEdge(0, 1, 7)
 
         assertEquals(2, graph.edgeCount)
-        assertEquals(listOf(Edge(1, 7), Edge(2, 0)), graph.outgoingEdges(0))
+        assertEquals(
+            listOf(Edge(from = 0, to = 1, weight = 7), Edge(from = 0, to = 2, weight = 0)),
+            graph.outgoingEdges(0)
+        )
         assertFalse(graph.hasEdge(1, 0))
     }
 
@@ -30,7 +33,7 @@ internal class AdjacencyMatrixGraphTest {
         assertEquals(1, graph.edgeCount)
         assertTrue(graph.hasEdge(0, 1))
         assertTrue(graph.hasEdge(1, 0))
-        assertEquals(listOf(Edge(0, 5)), graph.outgoingEdges(1))
+        assertEquals(listOf(Edge(from = 1, to = 0, weight = 5)), graph.outgoingEdges(1))
 
         assertTrue(graph.removeEdge(1, 0))
         assertEquals(0, graph.edgeCount)

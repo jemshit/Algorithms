@@ -2,43 +2,64 @@ package graph.shortestpath
 
 import graph.representation.Graph
 
-private data class Arc<V>(val from: V, val to: V, val weight: Int)
-
+/**
+ * Finds shortest distances from [source] in O(VE).
+ * Negative edge weights are allowed; unreachable vertices keep [Int.MAX_VALUE].
+ * Vertices reachable from a negative cycle are marked with [Int.MIN_VALUE].
+ */
 fun <V> bellmanFord(graph: Graph<V>, source: V): Map<V, Int> {
     val vertices = graph.vertices().toList()
     require(source in vertices) { "Unknown source vertex: $source" }
 
-    val arcs = vertices.flatMap { from ->
-        graph.outgoingEdges(from).map { edge -> Arc(from, edge.to, edge.weight) }
+    // all edges
+    val edges = vertices.flatMap { graph.outgoingEdges(it) }
+
+    val distances = mutableMapOf<V, Int>()
+    for (vertex in vertices) {
+        distances[vertex] = Int.MAX_VALUE
     }
-    val distance = vertices.associateWith { Int.MAX_VALUE }.toMutableMap()
-    distance[source] = 0
+    distances[source] = 0
 
-    for (pass in 1 until graph.vertexCount) {
-        var changed = false
-        for (arc in arcs) {
-            val fromDistance = distance.getValue(arc.from)
-            if (fromDistance == Int.MAX_VALUE || fromDistance == Int.MIN_VALUE) continue
+    // for each node
+    for (pass in 0 until vertices.size - 1) {
+        var distanceChanged = false
 
-            val candidate = fromDistance + arc.weight
-            if (candidate < distance.getValue(arc.to)) {
-                distance[arc.to] = candidate
-                changed = true
+        // check all edges
+        for (edge in edges) {
+            val fromDistance = distances.getValue(edge.from)
+
+            // Skip this edge when its starting vertex is unreachable from the source.
+            if (fromDistance == Int.MAX_VALUE)
+                continue
+
+            val candidate = fromDistance + edge.weight
+            if (candidate < distances.getValue(edge.to)) {
+                distances[edge.to] = candidate
+                distanceChanged = true
             }
         }
-        if (!changed) break
+
+        // No distance changed, so later passes cannot improve anything.
+        if (!distanceChanged) break
     }
 
-    // A vertex marked MIN_VALUE is reachable from a negative cycle.
-    repeat(graph.vertexCount) {
-        for (arc in arcs) {
-            val fromDistance = distance.getValue(arc.from)
-            if (fromDistance == Int.MAX_VALUE) continue
+    // Any further improvement proves that a reachable negative cycle exists.
+    // Repeated scans propagate MIN_VALUE to every vertex reachable from that cycle.
+    for (pass in 0 until vertices.size) {
+        for (edge in edges) {
+            val fromDistance = distances.getValue(edge.from)
 
-            if (fromDistance == Int.MIN_VALUE || fromDistance + arc.weight < distance.getValue(arc.to)) {
-                distance[arc.to] = Int.MIN_VALUE
+            // Skip this edge when its starting vertex is unreachable from the source.
+            if (fromDistance == Int.MAX_VALUE)
+                continue
+
+            // Mark vertices on or reachable from a negative cycle
+            if (fromDistance == Int.MIN_VALUE
+                || fromDistance + edge.weight < distances.getValue(edge.to)) {
+                distances[edge.to] = Int.MIN_VALUE
             }
         }
     }
-    return distance
+
+    return distances
 }

@@ -16,7 +16,7 @@ internal class ArrayAdjacencyListGraphTest {
 
         assertEquals(3, graph.vertexCount)
         assertEquals(2, graph.edgeCount)
-        assertEquals(listOf(Edge(1, 5)), graph.outgoingEdges(0))
+        assertEquals(listOf(Edge(from = 0, to = 1, weight = 5)), graph.outgoingEdges(0))
         assertTrue(graph.hasEdge(1, 2))
         assertFalse(graph.hasEdge(2, 1))
     }
@@ -29,7 +29,7 @@ internal class ArrayAdjacencyListGraphTest {
         graph.addEdge(0, 1, 9)
 
         assertEquals(1, graph.edgeCount)
-        assertEquals(listOf(Edge(1, 9)), graph.outgoingEdges(0))
+        assertEquals(listOf(Edge(from = 0, to = 1, weight = 9)), graph.outgoingEdges(0))
     }
 
     @Test
@@ -40,9 +40,12 @@ internal class ArrayAdjacencyListGraphTest {
         graph.addEdge(1, 2, 7)
 
         assertEquals(2, graph.edgeCount)
-        assertEquals(listOf(Edge(1, 5)), graph.outgoingEdges(0))
-        assertEquals(listOf(Edge(0, 5), Edge(2, 7)), graph.outgoingEdges(1))
-        assertEquals(listOf(Edge(1, 7)), graph.outgoingEdges(2))
+        assertEquals(listOf(Edge(from = 0, to = 1, weight = 5)), graph.outgoingEdges(0))
+        assertEquals(
+            listOf(Edge(from = 1, to = 0, weight = 5), Edge(from = 1, to = 2, weight = 7)),
+            graph.outgoingEdges(1)
+        )
+        assertEquals(listOf(Edge(from = 2, to = 1, weight = 7)), graph.outgoingEdges(2))
     }
 
     @Test
@@ -65,7 +68,7 @@ internal class ArrayAdjacencyListGraphTest {
 
         graph.addEdge(0, 2)
 
-        assertEquals(listOf(Edge(1)), snapshot)
-        assertEquals(listOf(Edge(1), Edge(2)), graph.outgoingEdges(0))
+        assertEquals(listOf(Edge(from = 0, to = 1)), snapshot)
+        assertEquals(listOf(Edge(from = 0, to = 1), Edge(from = 0, to = 2)), graph.outgoingEdges(0))
     }
 }

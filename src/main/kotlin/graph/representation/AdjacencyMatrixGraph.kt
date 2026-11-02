@@ -64,7 +64,7 @@ class AdjacencyMatrixGraph(
         return buildList {
             for (to in 0 until vertexCount) {
                 val weight = adjacency[from][to]
-                if (weight != INF) add(Edge(to, weight))
+                if (weight != INF) add(Edge(from, to, weight))
             }
         }
     }
