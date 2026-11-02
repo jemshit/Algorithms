@@ -2,41 +2,64 @@ package graph.connectivity
 
 import graph.representation.Graph
 
+/** Finds all articulation points using DFS in O(V+E). */
 fun <V> findArticulationPoints(graph: Graph<V>): Set<V> {
     require(!graph.directed) { "Articulation points are defined here for undirected graphs" }
 
-    val discovery = mutableMapOf<V, Int>()
-    val low = mutableMapOf<V, Int>()
-    val result = linkedSetOf<V>()
-    var time = 0
+    val visitOrder = mutableMapOf<V, Int>()
+    // updated based on min(node, neighbour)
+    val earliestReachableVisitOrder = mutableMapOf<V, Int>()
+    val articulationPoints = linkedSetOf<V>()
+    var nextVisitOrder = 0
 
-    fun visit(vertex: V, parent: V?) {
-        discovery[vertex] = time
-        low[vertex] = time++
-        var childCount = 0
+    fun dfsVisit(vertex: V, parent: V?) {
+        visitOrder[vertex] = nextVisitOrder
+        earliestReachableVisitOrder[vertex] = nextVisitOrder
+        nextVisitOrder++
+        var dfsChildCount = 0
 
         for (edge in graph.outgoingEdges(vertex)) {
             val neighbor = edge.to
             if (neighbor == parent) continue
 
-            if (neighbor !in discovery) {
-                childCount++
-                visit(neighbor, vertex)
-                low[vertex] = minOf(low.getValue(vertex), low.getValue(neighbor))
+            if (neighbor !in visitOrder) {
+                dfsChildCount++
+                dfsVisit(neighbor, vertex)
+                // updated [visitOrder, earliestReachableVisitOrder] for neighbor
 
-                if (parent != null && low.getValue(neighbor) >= discovery.getValue(vertex)) {
-                    result.add(vertex)
+                // Include any earlier vertex the neighbor's subtree can reach.
+                earliestReachableVisitOrder[vertex] = minOf(
+                    earliestReachableVisitOrder.getValue(vertex),
+                    earliestReachableVisitOrder.getValue(neighbor)
+                )
+
+                // The neighbor's subtree cannot reach an earlier vertex without this vertex.
+                if (parent != null &&
+                    earliestReachableVisitOrder.getValue(neighbor) >= visitOrder.getValue(vertex)
+                ) {
+                    articulationPoints.add(vertex)
                 }
             } else {
-                low[vertex] = minOf(low.getValue(vertex), discovery.getValue(neighbor))
+                // A back edge provides an alternative path to an earlier visited vertex.
+                earliestReachableVisitOrder[vertex] = minOf(
+                    earliestReachableVisitOrder.getValue(vertex),
+                    visitOrder.getValue(neighbor)
+                )
             }
         }
 
-        if (parent == null && childCount > 1) result.add(vertex)
+        // A DFS root is an articulation point when it has multiple independent child subtrees.
+        if (parent == null && dfsChildCount > 1) {
+            articulationPoints.add(vertex)
+        }
     }
 
+    // start a new DFS for each disconnected component.
     for (vertex in graph.vertices()) {
-        if (vertex !in discovery) visit(vertex, null)
+        if (vertex !in visitOrder) {
+            dfsVisit(vertex, null)
+        }
     }
-    return result
+
+    return articulationPoints
 }

@@ -7,29 +7,35 @@ data class ConnectedComponents<V>(
     val count: Int
 )
 
+/** Finds connected components using DFS in O(V+E). */
 fun <V> findConnectedComponents(graph: Graph<V>): ConnectedComponents<V> {
     require(!graph.directed) { "Connected components require an undirected graph" }
 
     val componentOf = mutableMapOf<V, Int>()
-    var component = 0
+    var componentCount = 0
 
-    fun dfsVisit(vertex: V) {
-        // like marking as visited
-        componentOf[vertex] = component
+    fun dfsVisit(vertex: V, componentId: Int) {
+        // Assigning a component also marks the vertex as visited.
+        componentOf[vertex] = componentId
 
         for (edge in graph.outgoingEdges(vertex)) {
-            if (edge.to !in componentOf) {
-                dfsVisit(edge.to)
+            val neighbor = edge.to
+            if (neighbor !in componentOf) {
+                dfsVisit(neighbor, componentId)
             }
         }
     }
 
-    // for every unvisited node, mark reachable nodes as same component
+    // Every unassigned vertex starts a new connected component.
     for (vertex in graph.vertices()) {
         if (vertex !in componentOf) {
-            dfsVisit(vertex)
-            component++
+            dfsVisit(vertex, componentCount)
+            componentCount++
         }
     }
-    return ConnectedComponents(componentOf, component)
+
+    return ConnectedComponents(
+        componentOf = componentOf,
+        count = componentCount
+    )
 }

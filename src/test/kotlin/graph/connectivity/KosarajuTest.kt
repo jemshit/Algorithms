@@ -20,7 +20,7 @@ internal class KosarajuTest {
         graph.addEdge("D", "E")
         graph.addEdge("E", "D")
 
-        val components = findStronglyConnectedComponents(graph).toSet()
+        val components = kosarajuScc(graph).toSet()
 
         assertEquals(
             setOf(setOf("A", "B", "C"), setOf("D", "E"), setOf("F")),
@@ -33,7 +33,7 @@ internal class KosarajuTest {
         val graph = MapAdjacencyListGraph(directed = false, vertices = listOf("A", "B"))
 
         assertThrows(IllegalArgumentException::class.java) {
-            findStronglyConnectedComponents(graph)
+            kosarajuScc(graph)
         }
     }
 }
